@@ -53,6 +53,48 @@ function displayRecommendations(recommendations, sectionId) {
     });
 }
 
+const searchInput = document.getElementById("search-input");
+const searchButton = document.getElementById("search-button");
+const clearButton = document.getElementById("clear-button");
+
+searchButton.addEventListener("click", () => {
+    const searchTerm = searchInput.value.toLowerCase(); // Get search term (lowercase)
+    filterRecommendations(searchTerm);
+});
+
+clearButton.addEventListener("click", () => {
+    searchInput.value = ""; // Clear input box
+    filterRecommendations(""); // Show all recommendations
+});
+
+
+function filterRecommendations(searchTerm) {
+    const allRecommendations = [
+        ...beachRecommendations,
+        ...templeRecommendations,
+        ...countryRecommendations
+    ];
+
+    const filteredRecommendations = allRecommendations.filter(rec => {
+        const name = rec.name.toLowerCase();
+        const description = rec.description.toLowerCase();
+        return name.includes(searchTerm) || description.includes(searchTerm);
+    });
+
+    // Clear existing recommendations
+    document.getElementById("beach-recommendations").innerHTML = "<h2>Beach Recommendations</h2>";
+    document.getElementById("temple-recommendations").innerHTML = "<h2>Temple Recommendations</h2>";
+    document.getElementById("country-recommendations").innerHTML = "<h2>Country Recommendations</h2>";
+
+    // Redisplay the filtered recommendations in their respective sections
+    filteredRecommendations.forEach(rec => {
+        if (beachRecommendations.includes(rec)) displayRecommendations([rec], "beach-recommendations");
+        if (templeRecommendations.includes(rec)) displayRecommendations([rec], "temple-recommendations");
+        if (countryRecommendations.includes(rec)) displayRecommendations([rec], "country-recommendations");
+    });
+
+}
+
 displayRecommendations(beachRecommendations, "beach-recommendations");
 displayRecommendations(templeRecommendations, "temple-recommendations");
 displayRecommendations(countryRecommendations, "country-recommendations");
